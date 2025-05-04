@@ -82,3 +82,7 @@
         </div>
     </div>
 </footer>
+
+<style>
+    margin-bottom: 25px;
+    </style>

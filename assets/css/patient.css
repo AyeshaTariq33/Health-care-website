@@ -243,3 +243,33 @@
 .patient-auth-container {
     margin-top: 40px; /* Additional spacing below navbar */
 }
+
+/* Structural Fixes */
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content-wrapper {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.patient-auth-container {
+    position: relative;
+}
+.patient-auth-container {
+    background-color: #f8f9fa;
+}
+
+.auth-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.password-toggle {
+    cursor: pointer;
+    z-index: 5;
+}

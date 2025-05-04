@@ -290,9 +290,12 @@ body {
 
 /* Custom Footer Styling */
 .footer-section {
-    background: linear-gradient(135deg, #3ba9c2ce, #83C5BE);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    padding: 3rem 0;
     position: relative;
-    overflow: hidden;
+    z-index: 2;
+    margin-top: auto;
 }
 
 .footer-section::before {
@@ -302,8 +305,19 @@ body {
     right: -50px;
     width: 150px;
     height: 150px;
-    background: #2A7B8E;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 50%;
+}
+
+.footer-section a {
+    color: white;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.footer-section a:hover {
+    opacity: 1;
+    text-decoration: none;
 }
 
 .hover-underline {
