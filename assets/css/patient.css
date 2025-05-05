@@ -273,3 +273,33 @@ body {
     cursor: pointer;
     z-index: 5;
 }
+/* Footer Gradient Fix */
+.footer-section {
+    background: linear-gradient(135deg, #2A7B8E, #83C5BE) !important;
+    position: relative;
+    z-index: 2;
+}
+
+/* Remove any conflicting background colors */
+.bg-primary, .bg-dark {
+    background: transparent !important;
+}
+
+/* Ensure text color */
+.footer-section,
+.footer-section h5,
+.footer-section .text-muted {
+    color: white !important;
+}
+
+/* Fix link colors */
+.footer-section a {
+    color: white !important;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.footer-section a:hover {
+    opacity: 1;
+    text-decoration: none;
+}

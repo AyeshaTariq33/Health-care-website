@@ -23,7 +23,7 @@
                 <h5 class="text-white mb-4 border-bottom pb-2">Quick Links</h5>
                 <ul class="list-unstyled">
                     <li class="mb-3">
-                        <a href="#" class="text-white text-decoration-none hover-underline">
+                        <a href="about-us.php" class="text-white text-decoration-none hover-underline">
                             <i class="fas fa-chevron-right me-2"></i>About Us
                         </a>
                     </li>

@@ -13,11 +13,11 @@
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-                <li class="nav-item"><a class="nav-link active" href="panels/patient/login.php">Patient</a></li>
-                <li class="nav-item"><a class="nav-link" href="panels/doctor/login.php">Doctor</a></li>
-                <li class="nav-item"><a class="nav-link" href="panels/pharmacy/login.php">Pharmacy</a></li>
-                <li class="nav-item"><a class="nav-link" href="panels/lab/login.php">Lab</a></li>
-                <li class="nav-item"><a class="nav-link" href="panels/admin/login.php">Admin</a></li>
+                <li class="nav-item"><a class="nav-link active" href="login.php">Patient</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.php">Doctor</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.php">Pharmacy</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.php">Lab</a></li>
+                <li class="nav-item"><a class="nav-link" href="login.php">Admin</a></li>
             </ul>
         </div>
     </div>

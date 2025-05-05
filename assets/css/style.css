@@ -290,7 +290,7 @@ body {
 
 /* Custom Footer Styling */
 .footer-section {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, #369cb3, #83C5BE);
     color: white;
     padding: 3rem 0;
     position: relative;
@@ -310,7 +310,6 @@ body {
 }
 
 .footer-section a {
-    color: white;
     opacity: 0.8;
     transition: opacity 0.3s ease;
 }
@@ -363,4 +362,53 @@ body {
         text-align: center;
         justify-content: center !important;
     }
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 1rem;
+}
+
+.hospital-icon {
+    font-size: 4rem;
+}
+
+.password-toggle {
+    cursor: pointer;
+    z-index: 5;
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    background: #f8f9fa;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.auth-card:hover {
+    transform: translateY(-5px);
+}
+
+.hospital-icon {
+    font-size: 4rem;
+    color: #2A7B8E;
+}
+
+.form-check-input:checked {
+    background-color: #2A7B8E;
+    border-color: #2A7B8E;
 }
