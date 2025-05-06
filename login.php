@@ -1,12 +1,45 @@
 <?php
 session_start();
-// Check if any user is already logged in
+require_once 'includes/database.php';
+
+// Redirect if already logged in
 if(isset($_SESSION['user_role'])) {
-    // Redirect to appropriate dashboard
-    header("Location: panels/" . $_SESSION['user_role'] . "/dashboard.php");
+    header("Location: Panels/" . $_SESSION['user_role'] . "/dashboard.php");
     exit();
 }
+
+// Handle login form submission
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM user WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+
+        if($user && password_verify($password, $user['password_hash'])) {
+            // Set session variables
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_role'] = $user['role'];
+            $_SESSION['user_email'] = $user['email'];
+            
+            // Redirect to dashboard
+            header("Location: Panels/" . $user['role'] . "/dashboard.php");
+            exit();
+        } else {
+            $_SESSION['login_error'] = "Invalid email or password";
+            header("Location: login.php");
+            exit();
+        }
+    } catch(PDOException $e) {
+        $_SESSION['login_error'] = "Database error: " . $e->getMessage();
+        header("Location: login.php");
+        exit();
+    }
+}
 ?>
+
 <?php include 'includes/header.php'; ?>
 <?php include 'includes/navbar.php'; ?>
 <link href="assets/css/style.css" rel="stylesheet">
@@ -23,10 +56,13 @@ if(isset($_SESSION['user_role'])) {
                     </div>
 
                     <?php if(isset($_SESSION['login_error'])): ?>
-                        <div class="alert alert-danger"><?= $_SESSION['login_error']; unset($_SESSION['login_error']); ?></div>
+                        <div class="alert alert-danger"><?= 
+                            $_SESSION['login_error']; 
+                            unset($_SESSION['login_error']); 
+                        ?></div>
                     <?php endif; ?>
 
-                    <form method="POST" action="process-login.php">
+                    <form method="POST" action="">
                         <div class="mb-3">
                             <label for="email" class="form-label">
                                 <i class="fas fa-envelope me-2"></i>Email Address
@@ -54,8 +90,10 @@ if(isset($_SESSION['user_role'])) {
                             <p class="mb-1">New user? 
                                 <a href="register.php" class="text-decoration-none">Create account</a>
                             </p>
+                            <a href="forgot-password.php" class="text-decoration-none small">
+                                <i class="fas fa-question-circle me-1"></i>Forgot Password?
+                            </a>
                         </div>
-
                     </form>
                 </div>
             </div>
