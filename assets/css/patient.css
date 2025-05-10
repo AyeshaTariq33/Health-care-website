@@ -303,3 +303,20 @@ body {
     opacity: 1;
     text-decoration: none;
 }
+
+.auth-page {
+    background: linear-gradient(135deg, #f8f9fa 50%, #ffffff 50%);
+    min-height: 100vh;
+    padding: 2rem;
+}
+.auth-card {
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 1rem;
+}
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
