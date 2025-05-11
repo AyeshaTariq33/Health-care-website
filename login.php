@@ -5,15 +5,17 @@ session_start();
 
 // Redirect if already logged in
 if (isset($_SESSION['user_role'])) {
-    header("Location: panels/" . $_SESSION['user_role'] . "/dashboard.php");
+    $base_url = "/healthcare-project/Health-care-Website";
+    header("Location: $base_url/panels/" . $_SESSION['user_role'] . "/dashboard.php");
     exit();
 }
 
-require_once 'includes/database.php';
-require_once 'config.php';
+require_once __DIR__ . '/includes/database.php';
+require_once __DIR__ . '/config.php';
 
 $error = '';
 $login_attempts = $_SESSION['login_attempts'] ?? 0;
+$base_url = "/healthcare-project/Health-care-Website";
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -50,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     // Reset login attempts
                     unset($_SESSION['login_attempts']);
                     
-                    header("Location: panels/" . $user['role'] . "/dashboard.php");
+                    header("Location: $base_url/panels/" . $user['role'] . "/dashboard.php");
                     exit();
                 } else {
                     $error = "Invalid credentials";
@@ -73,7 +75,7 @@ if (!isset($_SESSION['csrf_token'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include 'includes/header.php'; ?>
+    <?php include __DIR__ . '/includes/header.php'; ?>
     <title>Login - MediCare+</title>
 </head>
 <body class="auth-page">
@@ -94,7 +96,8 @@ if (!isset($_SESSION['csrf_token'])) {
                 <?php endif; ?>
 
                 <form method="POST" novalidate>
-                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
+                    <input type="hidden" name="csrf_token" 
+                           value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                     
                     <div class="mb-4">
                         <label for="email" class="form-label">
@@ -131,11 +134,11 @@ if (!isset($_SESSION['csrf_token'])) {
                     </div>
 
                     <div class="text-center small">
-                        <a href="forgot-password.php" class="text-decoration-none">
+                        <a href="<?= $base_url ?>/forgot-password.php" class="text-decoration-none">
                             <i class="fas fa-question-circle me-1"></i>Forgot Password?
                         </a>
                         <div class="mt-2">
-                            New user? <a href="register.php" class="text-decoration-none">Create account</a>
+                            New user? <a href="<?= $base_url ?>/register.php" class="text-decoration-none">Create account</a>
                         </div>
                     </div>
                 </form>
@@ -159,6 +162,6 @@ if (!isset($_SESSION['csrf_token'])) {
         });
     </script>
 
-    <?php include 'includes/footer.php'; ?>
+    <?php include __DIR__ . '/includes/footer.php'; ?>
 </body>
 </html>
