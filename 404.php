@@ -50,9 +50,6 @@ http_response_code(404);
                         <a href="index.php" class="btn btn-primary btn-lg">
                             <i class="fas fa-home me-2"></i>Return Home
                         </a>
-                        <a href="contact.php" class="btn btn-outline-primary btn-lg">
-                            <i class="fas fa-phone me-2"></i>Contact Support
-                        </a>
                     </div>
                 </div>
             </div>

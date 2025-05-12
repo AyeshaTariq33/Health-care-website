@@ -1,4 +1,15 @@
 <?php
+session_name('MEDICARE_SESS');
+session_start();
+$base_url = "/healthcare-project/Health-care-Website";
+
+// Simple check - Are you logged in?
+if (!isset($_SESSION['user_id'])) {
+    header("Location: $base_url/login.php");
+    exit();
+}
+?>
+<?php
 require_once __DIR__ . '/../../includes/auth-check.php';
 require_once __DIR__ . '/../../includes/database.php';
 
