@@ -1,74 +1,73 @@
 <?php
 session_start();
 
-// If already logged in, redirect to dashboard
-if (isset($_SESSION['user_role'])) {
-    header("Location: panels/" . $_SESSION['user_role'] . "/dashboard.php");
-    exit();
-}
-
-$pdo = new PDO('mysql:host=localhost;dbname=healthcare-db', 'root', '');
-$error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    $stmt = $pdo->prepare("SELECT id, first_name, last_name, password_hash, role FROM user WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if ($user && password_verify($password, $user['password_hash'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_role'] = $user['role'];
-        header("Location: panels/" . $user['role'] . "/dashboard.php");
-        exit();
-    } else {
-        $error = 'Invalid email or password';
+// Only process login if form submitted
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    try {
+        $pdo = new PDO('mysql:host=localhost;dbname=healthcare-db','root','');
+        
+        // 1. First find user by email only
+        $stmt = $pdo->prepare("SELECT * FROM user WHERE email = ?");
+        $stmt->execute([$_POST['email']]);
+        $user = $stmt->fetch();
+        
+        // 2. Verify password if user exists
+        if($user && password_verify($_POST['password'], $user['password_hash'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_role'] = $user['role'];
+            $_SESSION['user_name'] = $user['first_name'].' '.$user['last_name'];
+            header("Location: panels/".$user['role']."/dashboard.php");
+            exit();
+        } else {
+            $error = "Wrong email or password";
+        }
+    } catch(Exception $e) {
+        $error = "Database error";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php include __DIR__ . '/includes/header.php'; ?>
-    <title>Login</title>
+    <title>Login - MediCare+</title>
 </head>
 <body>
     <?php include __DIR__ . '/includes/navbar.php'; ?>
 
-    <main class="auth-page">
-        <div class="container mb-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-5">
-                    <div class="card shadow-lg mt-5">
-                        <div class="card-body">
-                            <?php if ($error): ?>
-                                <div class="alert alert-danger"><?= $error ?></div>
-                            <?php endif; ?>
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Login</h2>
+                        
+                        <?php if(isset($error)): ?>
+                            <div class="alert alert-danger"><?= $error ?></div>
+                        <?php endif; ?>
 
-                            <form method="POST">
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control" name="email" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control" name="password" required>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100">Login</button>
-                            </form>
-                            
-                            <div class="text-center mt-3">
-                                <a href="register.php">Register here</a>
+                        <form method="POST">
+                            <div class="mb-3">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-control" required>
                             </div>
+                            <div class="mb-3">
+                                <label>Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                        </form>
+
+                        <div class="text-center mt-3">
+                                <small>Don't have an account? 
+                                    <a href="register.php" class="text-decoration-none">Register here</a>
+                                </small>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <?php include __DIR__ . '/includes/footer.php'; ?>
 </body>
