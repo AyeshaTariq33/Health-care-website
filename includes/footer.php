@@ -17,34 +17,6 @@
                     <a href="#" class="text-white"><i class="fab fa-linkedin fa-lg"></i></a>
                 </div>
             </div>
-
-            <!-- Quick Links Column -->
-            <div class="col-lg-2">
-                <h5 class="text-white mb-4 border-bottom pb-2">Quick Links</h5>
-                <ul class="list-unstyled">
-                    <li class="mb-3">
-                        <a href="about-us.php" class="text-white text-decoration-none hover-underline">
-                            <i class="fas fa-chevron-right me-2"></i>About Us
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="#" class="text-white text-decoration-none hover-underline">
-                            <i class="fas fa-chevron-right me-2"></i>Services
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="#" class="text-white text-decoration-none hover-underline">
-                            <i class="fas fa-chevron-right me-2"></i>Doctors
-                        </a>
-                    </li>
-                    <li class="mb-3">
-                        <a href="#" class="text-white text-decoration-none hover-underline">
-                            <i class="fas fa-chevron-right me-2"></i>Contact
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
             <!-- Contact Info Column -->
             <div class="col-lg-3">
                 <h5 class="text-white mb-4 border-bottom pb-2">Contact Us</h5>

@@ -9,10 +9,6 @@
                 <div class="col-lg-6 hero-content">
                     <h1 class="hero-title">Your Health is Our Priority</h1>
                     <p class="hero-text">24/7 access to medical professionals and comprehensive care solutions</p>
-                    <div class="hero-cta">
-                        <a href="#" class="btn btn-primary btn-lg me-3">Book Consultation</a>
-                        <a href="#" class="btn btn-outline-primary btn-lg">Learn More</a>
-                    </div>
                 </div>
                 <div class="col-lg-6 hero-image">
                     <img src="assets/img/hero-bg.jpeg" alt="Medical Professionals" class="img-fluid">

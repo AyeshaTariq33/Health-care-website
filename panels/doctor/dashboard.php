@@ -159,27 +159,12 @@ if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'doctor') {
             </div>
 
             <!-- Quick Actions -->
-            <div class="col-md-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-white border-bottom">
-                        <h5 class="mb-0"><i class="fas fa-bolt text-warning me-2"></i>Quick Actions</h5>
-                    </div>
-                    <div class="card-body">
-                        <a href="#" class="btn btn-outline-primary w-100 mb-2">
-                            <i class="fas fa-file-prescription me-2"></i> New Prescription
-                        </a>
-                        <a href="#" class="btn btn-outline-success w-100 mb-2">
-                            <i class="fas fa-notes-medical me-2"></i> Add Patient Notes
-                        </a>
-                        <a href="#" class="btn btn-outline-info w-100 mb-2">
-                            <i class="fas fa-vial me-2"></i> Order Lab Test
-                        </a>
-                        <a href="#" class="btn btn-outline-danger w-100">
-                            <i class="fas fa-procedures me-2"></i> Request Admission
-                        </a>
-                    </div>
-                </div>
-            </div>
+<a href="manage-appointments.php" class="btn btn-outline-primary w-100 mb-2">
+    <i class="fas fa-calendar-check me-2"></i> Manage Appointments
+</a>
+<a href="create-prescription.php" class="btn btn-outline-success w-100 mb-2">
+    <i class="fas fa-file-prescription me-2"></i> Create Prescription
+</a>
         </div>
     </main>
 

@@ -74,73 +74,26 @@ if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'patient') {
 
         <!-- Quick Actions -->
         <div class="row g-3 mb-4">
-            <div class="col-6 col-md-3">
-                <a href="#" class="card quick-action-btn text-center py-3 text-decoration-none">
-                    <div class="card-body">
-                        <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
-                            <i class="fas fa-calendar-plus"></i>
-                        </div>
-                        <h6 class="mb-0">Book Appointment</h6>
-                    </div>
-                </a>
+            <div class="col-6 col-md-6">
+    <a href="book-appointment.php" class="card quick-action-btn text-center py-3 text-decoration-none">
+        <div class="card-body">
+            <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
+                <i class="fas fa-calendar-check"></i>
             </div>
-            <div class="col-6 col-md-3">
-                <a href="#" class="card quick-action-btn text-center py-3 text-decoration-none">
+            <h6 class="mb-0">Book Appointments</h6>
+        </div>
+    </a>
+</div>
+            <div class="col-6 col-md-6">
+                <a href="view-appointments.php" class="card quick-action-btn text-center py-3 text-decoration-none">
                     <div class="card-body">
                         <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
                             <i class="fas fa-prescription"></i>
                         </div>
-                        <h6 class="mb-0">Request Refill</h6>
+                        <h6 class="mb-0">View Appointments</h6>
                     </div>
                 </a>
-            </div>
-            <div class="col-6 col-md-3">
-                <a href="#" class="card quick-action-btn text-center py-3 text-decoration-none">
-                    <div class="card-body">
-                        <div class="feature-icon bg-info bg-opacity-10 text-info rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
-                            <i class="fas fa-file-medical"></i>
-                        </div>
-                        <h6 class="mb-0">Medical Records</h6>
-                    </div>
-                </a>
-            </div>
-            <div class="col-6 col-md-3">
-                <a href="#" class="card quick-action-btn text-center py-3 text-decoration-none">
-                    <div class="card-body">
-                        <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-2">
-                            <i class="fas fa-comment-medical"></i>
-                        </div>
-                        <h6 class="mb-0">Message Doctor</h6>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Upcoming Appointments -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white">
-                <h5 class="mb-0"><i class="fas fa-calendar-day text-primary me-2"></i>Upcoming Appointments</h5>
-            </div>
-            <div class="card-body">
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1">Dr. Smith - Cardiology</h6>
-                            <small>Tomorrow</small>
-                        </div>
-                        <p class="mb-1">10:30 AM - 11:15 AM</p>
-                        <small class="text-muted">Main Hospital, Room 304</small>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h6 class="mb-1">Blood Work</h6>
-                            <small>Next Week</small>
-                        </div>
-                        <p class="mb-1">Wednesday, 9:00 AM</p>
-                        <small class="text-muted">Lab Building</small>
-                    </a>
-                </div>
-            </div>
+    </div>
         </div>
 
         <!-- Recent Prescriptions -->
