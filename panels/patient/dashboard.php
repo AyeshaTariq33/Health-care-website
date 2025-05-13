@@ -131,6 +131,7 @@ $upcomingAppointments = $pdo->query("
         <?php endif; ?>
 
         <!-- Quick Stats -->
+         
         <div class="row g-3 mb-4">
             <div class="col-md-4">
                 <div class="card dashboard-card prescription-card h-100">

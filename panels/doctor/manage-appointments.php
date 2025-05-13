@@ -30,7 +30,7 @@ $appointments = $stmt->fetchAll();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-4">
+    <div class="container mt-5 py-3">
         <h3>My Appointments</h3>
         
         <?php if (empty($appointments)): ?>
