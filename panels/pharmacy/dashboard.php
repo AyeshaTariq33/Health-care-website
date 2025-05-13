@@ -1,214 +1,184 @@
 <?php
 session_start();
-if(!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'pharmacy') {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'pharmacy') {
     header("Location: ../../login.php");
-    exit();
+    exit;
 }
+
+$pdo = new PDO('mysql:host=localhost;dbname=healthcare-db', 'root', '');
+
+// Get counts for dashboard
+$inventoryCount = $pdo->query("SELECT COUNT(*) FROM medicines")->fetchColumn();
+$pendingOrders = $pdo->query("SELECT COUNT(*) FROM prescriptions WHERE status = 'pending'")->fetchColumn();
+$activeDeliveries = $pdo->query("SELECT COUNT(*) FROM prescriptions WHERE delivery_status IS NOT NULL AND delivery_status != 'delivered'")->fetchColumn();
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <?php include '../../includes/header.php'; ?>
-    <title>Pharmacy Dashboard | MediCare+</title>
+    <title>Pharmacy Dashboard</title>
     <style>
-        /* Consistent dashboard styling */
-        body {
-            padding-top: 70px;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f8f9fa;
+        .dashboard-card {
+            transition: transform 0.3s;
+            border-left: 4px solid;
         }
-        
-        main {
-            flex: 1;
-            padding-bottom: 20px;
+        .dashboard-card:hover {
+            transform: translateY(-5px);
         }
-        
+        .inventory-card {
+            border-left-color: #3498db;
+        }
+        .orders-card {
+            border-left-color: #2ecc71;
+        }
+        .delivery-card {
+            border-left-color: #9b59b6;
+        }
+        .quick-stats {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
         footer {
             background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
             background-attachment: fixed !important;
             margin-top: auto;
-        }
-        
-        /* Pharmacy-specific styling */
-        .pharmacy-card {
-            border-left: 4px solid #2ecc71;
-        }
-        
-        .low-stock {
-            background-color: #fff8f0;
-            border-left: 4px solid #f39c12 !important;
-        }
-        
-        .out-of-stock {
-            background-color: #fff0f0;
-        }
-        
-        .med-badge {
-            font-size: 0.75rem;
         }
     </style>
 </head>
 <body>
     <?php include '../../includes/navbar.php'; ?>
     
-    <main class="container py-4">
-        <!-- Pharmacy Header -->
+    <div class="container py-4 mt-5">
+        <!-- Header with Success Messages -->
         <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded shadow-sm">
             <div>
-                <h2 class="text-primary mb-1">Pharmacy Dashboard</h2>
-                <p class="text-muted mb-0"><?= date('l, F j, Y') ?> | <span class="badge bg-success">Medication Center</span></p>
+                <h2 class="text-primary mb-1"><i class="fas fa-prescription-bottle me-2"></i>Pharmacy Dashboard</h2>
+                <p class="text-muted mb-0"><?= date('l, F j, Y') ?></p>
             </div>
             <div>
-                <a href="../../logout.php" class="btn btn-danger me-2">
+                <a href="../../logout.php" class="btn btn-danger">
                     <i class="fas fa-sign-out-alt me-1"></i> Logout
                 </a>
             </div>
         </div>
 
-        <!-- Pharmacy Stats -->
-        <div class="row g-3 mb-4">
-            <div class="col-md-3">
-                <div class="card pharmacy-card h-100">
+        <?php if (isset($_GET['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show mb-4">
+                <?php
+                switch($_GET['success']) {
+                    case 'medicine_added': echo "<i class='fas fa-pills me-2'></i>Medicine added successfully!"; break;
+                    case 'order_processed': echo "<i class='fas fa-check-circle me-2'></i>Order processed successfully!"; break;
+                    case 'status_updated': echo "<i class='fas fa-truck me-2'></i>Delivery status updated!"; break;
+                }
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
+        <!-- Quick Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="card dashboard-card inventory-card h-100">
                     <div class="card-body">
-                        <h6 class="text-muted">Pending Orders</h6>
-                        <h2 class="text-primary">24</h2>
-                        <small class="text-success">5 ready for pickup</small>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3 text-primary">
+                                <i class="fas fa-pills fa-3x"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title">Inventory</h5>
+                                <p class="quick-stats text-primary"><?= $inventoryCount ?></p>
+                                <small class="text-muted">Medicines in stock</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="manage-inventory.php" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-arrow-right me-2"></i>Manage
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card pharmacy-card h-100">
+            
+            <div class="col-md-4">
+                <div class="card dashboard-card orders-card h-100">
                     <div class="card-body">
-                        <h6 class="text-muted">Today's Dispensed</h6>
-                        <h2 class="text-primary">87</h2>
-                        <small class="text-info">12 controlled substances</small>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3 text-success">
+                                <i class="fas fa-clipboard-list fa-3x"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title">Pending Orders</h5>
+                                <p class="quick-stats text-success"><?= $pendingOrders ?></p>
+                                <small class="text-muted">Require processing</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <a href="process-orders.php" class="btn btn-outline-success w-100">
+                            <i class="fas fa-arrow-right me-2"></i>Process
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card pharmacy-card h-100">
+            
+            <div class="col-md-4">
+                <div class="card dashboard-card delivery-card h-100">
                     <div class="card-body">
-                        <h6 class="text-muted">Low Stock Items</h6>
-                        <h2 class="text-primary">9</h2>
-                        <small class="text-warning">3 critical</small>
+                        <div class="d-flex align-items-center">
+                            <div class="me-3 text-purple">
+                                <i class="fas fa-truck-fast fa-3x"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title">Active Deliveries</h5>
+                                <p class="quick-stats text-purple"><?= $activeDeliveries ?></p>
+                                <small class="text-muted">In progress</small>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card pharmacy-card h-100">
-                    <div class="card-body">
-                        <h6 class="text-muted">Expiring Soon</h6>
-                        <h2 class="text-primary">5</h2>
-                        <small class="text-danger">This month</small>
+                    <div class="card-footer bg-transparent">
+                        <a href="update-deliveries.php" class="btn btn-outline-purple w-100">
+                            <i class="fas fa-arrow-right me-2"></i>Update
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Pharmacy Management -->
-        <div class="row">
-            <!-- Medication Inventory -->
-            <div class="col-lg-8 mb-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-white d-flex justify-content-between align-items-center border-bottom">
-                        <h5 class="mb-0"><i class="fas fa-pills text-success me-2"></i>Medication Inventory</h5>
-                        <div>
-                            <button class="btn btn-sm btn-outline-success me-2">
-                                <i class="fas fa-plus me-1"></i> Add Medication
-                            </button>
-                            <button class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-filter me-1"></i> Filter
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table mb-0">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th>Medication</th>
-                                        <th>Stock</th>
-                                        <th>Category</th>
-                                        <th>Expiry</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <strong>Metformin 500mg</strong><br>
-                                            <small class="text-muted">Bottle of 100</small>
-                                        </td>
-                                        <td>
-                                            <div class="progress" style="height: 20px;">
-                                                <div class="progress-bar bg-success" style="width: 75%">42</div>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge bg-info med-badge">Diabetes</span></td>
-                                        <td>2024-12-15</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-secondary">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr class="low-stock">
-                                        <td>
-                                            <strong>Amoxicillin 250mg</strong><br>
-                                            <small class="text-muted">Capsules</small>
-                                        </td>
-                                        <td>
-                                            <div class="progress" style="height: 20px;">
-                                                <div class="progress-bar bg-warning" style="width: 15%">3</div>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge bg-primary med-badge">Antibiotic</span></td>
-                                        <td>2024-08-30</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-outline-warning">
-                                                <i class="fas fa-exclamation-triangle"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <!-- More medications... -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+        <!-- Recent Activity Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="fas fa-clock-rotate-left me-2"></i>Recent Activity</h5>
             </div>
-
-            <!-- Quick Actions -->
-            <div class="col-lg-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-white border-bottom">
-                        <h5 class="mb-0"><i class="fas fa-bolt text-warning me-2"></i>Pharmacy Actions</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-outline-success text-start">
-                                <i class="fas fa-prescription me-2"></i> Process New Prescription
-                            </button>
-                            <button class="btn btn-outline-primary text-start">
-                                <i class="fas fa-truck me-2"></i> Place Supplier Order
-                            </button>
-                            <button class="btn btn-outline-info text-start">
-                                <i class="fas fa-search me-2"></i> Medication Lookup
-                            </button>
-                            <button class="btn btn-outline-warning text-start">
-                                <i class="fas fa-exclamation-triangle me-2"></i> Report Discrepancy
-                            </button>
-                            <button class="btn btn-outline-danger text-start">
-                                <i class="fas fa-ban me-2"></i> Recall Management
-                            </button>
+            <div class="card-body">
+                <div class="list-group">
+                    <?php
+                    $recentActivity = $pdo->query("
+                        SELECT 'prescription' AS type, p.id, p.medication, 
+                               CONCAT(u.first_name, ' ', u.last_name) AS patient_name,
+                               p.created_at
+                        FROM prescriptions p
+                        JOIN user u ON p.patient_id = u.id
+                        ORDER BY p.created_at DESC
+                        LIMIT 5
+                    ")->fetchAll();
+                    
+                    foreach ($recentActivity as $activity): ?>
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">
+                                <i class="fas fa-prescription me-2 text-primary"></i>
+                                New <?= $activity['type'] ?> for <?= $activity['patient_name'] ?>
+                            </h6>
+                            <small><?= date('M j, g:i A', strtotime($activity['created_at'])) ?></small>
                         </div>
+                        <p class="mb-1"><?= $activity['medication'] ?></p>
                     </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <?php include '../../includes/footer.php'; ?>
 </body>

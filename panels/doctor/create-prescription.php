@@ -1,133 +1,75 @@
 <?php
 session_start();
-require_once '../../includes/db_connect.php';
-require_once '../../includes/auth_check.php';
-
-// Verify doctor role
-if ($_SESSION['user_role'] !== 'doctor') {
-    header("Location: /login.php");
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'doctor') {
+    header("Location: ../../login.php");
     exit;
 }
 
-// Process form submission
+$pdo = new PDO('mysql:host=localhost;dbname=healthcare-db', 'root', '');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try {
-        $stmt = $pdo->prepare("
-            INSERT INTO prescriptions 
-            (doctor_id, patient_id, medication, dosage, instructions) 
-            VALUES (?, ?, ?, ?, ?)
-        ");
-        $stmt->execute([
-            $_SESSION['user_id'],
-            $_POST['patient_id'],
-            htmlspecialchars($_POST['medication']),
-            htmlspecialchars($_POST['dosage']),
-            htmlspecialchars($_POST['instructions'])
-        ]);
-        
-        $_SESSION['success'] = "Prescription created successfully";
-        header("Location: dashboard.php");
-        exit;
-    } catch (PDOException $e) {
-        $error = "Error saving prescription: " . $e->getMessage();
-    }
+    $stmt = $pdo->prepare("
+        INSERT INTO prescriptions 
+        (doctor_id, patient_id, medication, dosage, instructions) 
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $_SESSION['user_id'],
+        $_POST['patient_id'],
+        $_POST['medication'],
+        $_POST['dosage'],
+        $_POST['instructions']
+    ]);
+    
+    header("Location: dashboard.php?success=1");
+    exit;
 }
 
-// Fetch patients list
+// Fetch patients
 $patients = $pdo->query("
     SELECT id, CONCAT(first_name, ' ', last_name) AS name 
     FROM user 
     WHERE role = 'patient'
-")->fetchAll(PDO::FETCH_ASSOC);
+")->fetchAll();
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <?php include '../../includes/header.php'; ?>
-    <title>New Prescription | MediCare</title>
-    <style>
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-    </style>
+    <title>Create Prescription</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <?php include '../../includes/navbar.php'; ?>
-    
-    <main class="container py-4">
-        <div class="form-container">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2>Create New Prescription</h2>
-                <a href="dashboard.php" class="btn btn-outline-secondary">Back</a>
+    <div class="container mt-4">
+        <h3>Create New Prescription</h3>
+        
+        <form method="POST">
+            <div class="mb-3">
+                <label>Patient:</label>
+                <select name="patient_id" class="form-control" required>
+                    <?php foreach ($patients as $patient): ?>
+                        <option value="<?= $patient['id'] ?>"><?= $patient['name'] ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
-
-            <?php if (isset($error)): ?>
-                <div class="alert alert-danger"><?= $error ?></div>
-            <?php endif; ?>
-
-            <form method="POST" novalidate>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label for="patient_id" class="form-label">Patient</label>
-                        <select name="patient_id" id="patient_id" class="form-select" required>
-                            <option value="">Select Patient</option>
-                            <?php foreach ($patients as $patient): ?>
-                                <option value="<?= $patient['id'] ?>">
-                                    <?= htmlspecialchars($patient['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label for="medication" class="form-label">Medication</label>
-                        <input type="text" name="medication" id="medication" class="form-control" required>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <label for="dosage" class="form-label">Dosage</label>
-                        <input type="text" name="dosage" id="dosage" class="form-control" required>
-                    </div>
-                    
-                    <div class="col-12">
-                        <label for="instructions" class="form-label">Instructions</label>
-                        <textarea name="instructions" id="instructions" class="form-control" rows="4" required></textarea>
-                    </div>
-                    
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary px-4">
-                            <i class="fas fa-save me-2"></i>Save Prescription
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </main>
-
-    <?php include '../../includes/footer.php'; ?>
-    
-    <script>
-        // Basic client-side validation
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const requiredFields = this.querySelectorAll('[required]');
-            let isValid = true;
             
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    field.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    field.classList.remove('is-invalid');
-                }
-            });
+            <div class="mb-3">
+                <label>Medication:</label>
+                <input type="text" name="medication" class="form-control" required>
+            </div>
             
-            if (!isValid) {
-                e.preventDefault();
-                alert('Please fill all required fields');
-            }
-        });
-    </script>
+            <div class="mb-3">
+                <label>Dosage:</label>
+                <input type="text" name="dosage" class="form-control" required>
+            </div>
+            
+            <div class="mb-3">
+                <label>Instructions:</label>
+                <textarea name="instructions" class="form-control" rows="3" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save Prescription</button>
+        </form>
+    </div>
 </body>
 </html>
