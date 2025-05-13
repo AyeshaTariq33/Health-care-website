@@ -23,6 +23,13 @@ $appointments = $pdo->query("
 <head>
     <title>My Appointments</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
+            background-attachment: fixed !important;
+            margin-top: auto;
+        }
+</style>
 </head>
 <body>
     <div class="container mt-5">
