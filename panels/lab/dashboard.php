@@ -2,7 +2,6 @@
 session_start();
 $pdo = new PDO('mysql:host=localhost;dbname=healthcare-db', 'root', '');
 
-// Fetch all dashboard stats in single query for efficiency
 $stats = $pdo->query("
     SELECT 
         (SELECT COUNT(*) FROM lab_orders WHERE status = 'pending') AS pending_tests,
@@ -13,7 +12,6 @@ $stats = $pdo->query("
         (SELECT COUNT(*) FROM lab_requests WHERE priority = 'urgent' AND DATE(created_at) = CURDATE()) AS urgent_tests
 ")->fetch();
 
-// Recent orders with simplified query
 $recentOrders = $pdo->query("
     SELECT lo.id, ltt.name AS test_name, 
            CONCAT(u.first_name, ' ', u.last_name) AS patient_name,
@@ -110,7 +108,6 @@ $recentOrders = $pdo->query("
                 </div>
             </div>
 
-            <!-- Card 2: Processing Tests -->
             <div class="col-xl-4 col-md-6">
                 <div class="card dashboard-card card-2 h-100">
                     <div class="card-body">
@@ -153,8 +150,6 @@ $recentOrders = $pdo->query("
                     </div>
                 </div>
             </div>
-
-            <!-- Card 4: Critical Results -->
             <div class="col-xl-4 col-md-6">
                 <div class="card dashboard-card card-4 h-100">
                     <div class="card-body">
@@ -198,7 +193,6 @@ $recentOrders = $pdo->query("
                 </div>
             </div>
 
-            <!-- Card 6: Urgent Tests -->
             <div class="col-xl-4 col-md-6">
                 <div class="card dashboard-card card-6 h-100">
                     <div class="card-body">
@@ -221,7 +215,6 @@ $recentOrders = $pdo->query("
             </div>
         </div>
 
-        <!-- Recent Orders Section -->
         <div class="card shadow-sm mb-4">
             <div class="card-header bg-white py-3">
                 <h5 class="mb-0">
@@ -280,7 +273,6 @@ $recentOrders = $pdo->query("
         </div>
     </div>
 
-    <!-- CDN JS Links -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
